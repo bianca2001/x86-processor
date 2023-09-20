@@ -23,7 +23,7 @@ ifstream fin("input.txt");
 struct mesg_buffer {
     long mesg_type;
     char mesg_text[100];
-} message;
+};
 
 int main(){
     pid_t child;
@@ -32,23 +32,28 @@ int main(){
     CPU cpu;
     key_t key;
     
-    message.mesg_type = 1;  
+    
+
+
+    key = ftok("progfile", 65);
+    int msgid = msgget(key, 0666 | IPC_CREAT);
 
     while(!finished) {
         if(processes < 4) {
-            fin >> message.mesg_text;
+            
             processes++;
             child = fork();
-
-            key = ftok("progfile", 65);
+            
 
             if(child == 0) {
                 cout << "child created\n";
-                
                 cpu.fetch.run(key);
-            }else{
-                int msgid = msgget(key, 0666 | IPC_CREAT);
-                cout << "message id: " << msgid << endl;
+                return 0;
+            }
+            else{
+                mesg_buffer message;
+                message.mesg_type = 1;  
+                fin >> message.mesg_text;
                 msgsnd(msgid, &message, sizeof(message), 0);
                 cout << "message sent\n";
             }

@@ -16,7 +16,7 @@ void Fetch::run(key_t key)
     int msgid = msgget(key, 0666 | IPC_CREAT);
 
     cout << "fetching\n";
-    msgrcv(msgid, &message_fetch, 100, 1, 0);
+    msgrcv(msgid, &message_fetch, sizeof(message_fetch), 1, 0);
 
     cout << message_fetch.mesg_text << endl;
 
