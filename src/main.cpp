@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include "cpu.h"
+#include "memory.h"
 using namespace std;
 
 ifstream fin("input.txt");
@@ -16,10 +17,10 @@ ifstream fin("input.txt");
 
 //communication done through queues https://www.geeksforgeeks.org/ipc-using-message-queues/
 
-//clock
-
 //fetch/decode/execute/load/store parallelized
 
+//TODO: clock
+//TODO: modify to open all the modules at the same time instead
 struct mesg_buffer {
     long mesg_type;
     char mesg_text[100];
@@ -31,8 +32,7 @@ int main(){
     int processes = 0;
     CPU cpu;
     key_t key;
-    
-    
+    Memory memory;
 
 
     key = ftok("progfile", 65);
@@ -44,7 +44,7 @@ int main(){
             processes++;
             child = fork();
             
-
+            //TODO: change to read the address or to start from 0
             if(child == 0) {
                 cout << "child created\n";
                 cpu.fetch.run(key);

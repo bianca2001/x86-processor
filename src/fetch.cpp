@@ -4,15 +4,19 @@
 #include <string>
 #include <iostream>
 #include<unistd.h>
+#include "mesgBuffer.cpp"
 using namespace std;
 
-struct mesg_buffer {
-    long mesg_type;
-    char mesg_text[100];
-} message_fetch;
+
+Fetch::Fetch()
+{
+    keyLoadStore = ftok("progfile", 1);
+    msgIdLoadStore = msgget(keyLoadStore, 0666 | IPC_CREAT);
+}
 
 void Fetch::run(key_t key)
 {
+    mesg_buffer message_fetch;
     int msgid = msgget(key, 0666 | IPC_CREAT);
 
     cout << "fetching\n";
@@ -20,5 +24,9 @@ void Fetch::run(key_t key)
 
     cout << message_fetch.mesg_text << endl;
 
+    
+
+    mesg_buffer_fetch message_from_load;
+    msgrcv(msgIdLoadStore, &message_fetch, sizeof(message_fetch), 1, 0);
     sleep(1);
 }
