@@ -6,6 +6,10 @@ public:
      Fetch();
      void run(key_t key);
 private:
+     static int instructionPointer;
      key_t keyLoadStore;
      int msgIdLoadStore;
+
 };
+
+int Fetch::instructionPointer = 0;

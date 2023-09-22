@@ -7,6 +7,7 @@
 #include <string>
 #include "cpu.h"
 #include "memory.h"
+
 using namespace std;
 
 ifstream fin("input.txt");
@@ -32,12 +33,36 @@ int main(){
     int processes = 0;
     CPU cpu;
     key_t key;
-    Memory memory;
+
+    char* file = (char*)"input.txt";
+    Memory::loadInstructionsFromFile(file);
+
+    // key = ftok("progfile", 65);
+    // int msgid = msgget(key, 0666 | IPC_CREAT);
+
+    child = fork();
+
+    if(child == 0){
+        cpu.fetch.run(key);
+        return 0;
+    }
+
+    child = fork();
+
+    if(child == 0) {
+        cpu.decode.run();
+        return 0;
+    }
+
+    child = fork();
+
+    if(child == 0) {
+        cpu.execute.run();
+        return 0;
+    }
 
 
-    key = ftok("progfile", 65);
-    int msgid = msgget(key, 0666 | IPC_CREAT);
-
+/*
     while(!finished) {
         if(processes < 4) {
             
@@ -64,5 +89,6 @@ int main(){
             wait(NULL);
             processes--;
         }
-    }
+
+    } */
 }
