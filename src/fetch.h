@@ -7,8 +7,10 @@ public:
      void run(key_t key);
 private:
      static int instructionPointer;
-     key_t keyLoadStore;
-     int msgIdLoadStore;
+     key_t keyToLoadStore;
+     int msgIdToLoadStore;
+     key_t keyFromLoadStore;
+     int msgIdFromLoadStore;    
 
 };
 

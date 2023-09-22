@@ -9,6 +9,8 @@ public:
     void load(int address);
     void store(int address, char** data);
 private:
-    key_t keyFetch;
-    int msgidFetch;
+    key_t keyFromFetch;
+    int msgIdFromFetch;
+    key_t keyToFetch;
+    int msgIdToFetch;
 };

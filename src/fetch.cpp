@@ -16,17 +16,21 @@ Fetch::Fetch()
 
 void Fetch::run(key_t key)
 {
-    mesg_buffer message_fetch;
-    int msgid = msgget(key, 0666 | IPC_CREAT);
+    mesg_buffer_int pointer;
+    pointer.mesg_type = 1;
+    pointer.mesg_text = instructionPointer;
 
-    cout << "fetching\n";
-    msgrcv(msgid, &message_fetch, sizeof(message_fetch), 1, 0);
+cerr<<"Fetch: Sending instruction pointer to load/store\n";
 
-    cout << message_fetch.mesg_text << endl;
+    msgsnd(msgIdLoadStore, &pointer, sizeof(pointer), 0);
 
-    
+cerr<<"Fetch: Waiting for message from load/store\n";
 
-    mesg_buffer_fetch message_from_load;
-    msgrcv(msgIdLoadStore, &message_fetch, sizeof(message_fetch), 1, 0);
+    mesg_buffer_matrix message_from_load;
+
+    msgrcv(msgIdLoadStore, &message_from_load, sizeof(message_from_load), 1, 0);
+
+cerr<<"Fetch: Received message from load/store\n";
+
     sleep(1);
 }

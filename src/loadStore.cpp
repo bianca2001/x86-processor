@@ -4,14 +4,21 @@
 
 LoadStore::LoadStore()
 {
-    keyFetch = ftok("progfile", 1);
-    msgidFetch = msgget(keyFetch, 0666 | IPC_CREAT);
+    keyFromFetch = ftok("progfile", 1);
+    msgIdFromFetch = msgget(keyFetch, 0666 | IPC_CREAT);
 
+    keyToFetch = ftok("progfile", 2);
+    msgIdToFetch = msgget(keyFetch, 0666 | IPC_CREAT);
 }
 
-void LoadStore::load(int address)
+void LoadStore::load()
 {
-    mesg_buffer_fetch message;
+    mesg_buffer_int pointer;
+    pointer.mesg_type = 1;
+
+    msgrcv(msgidFetch, &pointer, sizeof(pointer), 1, 0);
+
+    mesg_buffer_matrix message;
     message.mesg_type = 1;
     char** aux = Memory::get_data(address);
     message.mesg_text = aux;
