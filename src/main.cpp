@@ -81,33 +81,4 @@ int main(){
         return 0;
     }
 
-/*
-    while(!finished) {
-        if(processes < 4) {
-            
-            processes++;
-            child = fork();
-            
-            //TODO: change to read the address or to start from 0
-            if(child == 0) {
-                cout << "child created\n";
-                cpu.fetch.run(key);
-                return 0;
-            }
-            else{
-                mesg_buffer message;
-                message.mesg_type = 1;  
-                fin >> message.mesg_text;
-                msgsnd(msgid, &message, sizeof(message), 0);
-                cout << "message sent\n";
-            }
-            
-        }
-        else {
-            cout << "waiting \n";
-            wait(NULL);
-            processes--;
-        }
-
-    } */
 }

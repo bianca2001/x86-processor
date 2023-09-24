@@ -24,12 +24,21 @@ cerr<<"Load: Waiting for address from fetch\n";
 
     msgrcv(msgIdFromFetch, &pointer, sizeof(pointer), 1, 0);
 
-    mesg_buffer_char message;
+    mesg_buffer_char_matrix message;
     message.mesg_type = 1;
 
 cerr << "Load: Received address " << pointer.mesg_text << " from fetch\n";
 
-    message.mesg_text = Memory::get_data(pointer.mesg_text);
+    int p = pointer.mesg_text;
+    message.mesg_text[0] = Memory::get_data(p);
+    p += 2;
+    message.mesg_text[1] = Memory::get_data(p);
+    p += 2;
+    message.mesg_text[2] = Memory::get_data(p);
+    p += 2;
+    message.mesg_text[3] = Memory::get_data(p);
+
+
     
 
 cerr<<"Load: Sending data "<< message.mesg_text <<" to fetch\n";

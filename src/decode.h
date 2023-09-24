@@ -3,9 +3,10 @@
 
 class Decode{
 public:
+    Decode();
     void run();
 
 private:
-    key_t keyFetch;
-    int msgIdFetch;
+    key_t keyFromFetch;
+    int msgIdFromFetch;
 };

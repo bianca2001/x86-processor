@@ -16,6 +16,8 @@ Fetch::Fetch()
     keyFromLoad = ftok("/workspaces/codespaces-blank/message queues/loadToFetch", 2);
     msgIdFromLoad = msgget(keyFromLoad, 0666 | IPC_CREAT);
 
+    keyToDecode = ftok("/workspaces/codespaces-blank/message queues/fetchToDecode", 3);
+    msgIdToDecode = msgget(keyToDecode, 0666 | IPC_CREAT);
 }
 
 void Fetch::run(key_t key)
@@ -30,11 +32,16 @@ cerr<<"Fetch: Sending instruction pointer "<< pointer.mesg_text <<" to load\n";
 
 cerr<<"Fetch: Waiting for message from load\n";
 
-    mesg_buffer_char message_from_load;
+    mesg_buffer_char_matrix message_from_load;
 
     msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
 
-cerr<<"Fetch: Received message "<< message_from_load.mesg_text <<" from load\n";
+cerr<<"Fetch: Received message ";
+    for(int i = 0; i < 4; i++) {
+        cerr << message_from_load.mesg_text[i] << " ";
+    }
 
+    msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);
+cerr<<"Fetch: Sent message to decode\n";
     return;
 }

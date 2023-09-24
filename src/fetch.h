@@ -11,4 +11,6 @@ private:
      int msgIdToLoad;
      key_t keyFromLoad;
      int msgIdFromLoad;    
+     key_t keyToDecode;
+     int msgIdToDecode;
 };

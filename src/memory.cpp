@@ -31,7 +31,7 @@ void Memory::loadInstructionsFromFile(char* filename)
             address = stoi(line.substr(1), 0, 16);
         }
         else {
-            char* data = new char[65535];
+            char* data;
             strcpy(data, line.c_str());
             strcpy(memory[address], data);
 
