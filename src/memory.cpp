@@ -6,43 +6,39 @@ using namespace std;
 
 
 
-char** Memory::get_data(int address)
+char* Memory::get_data(int address)
 {
+cerr<<"Memory: Returning data "<< memory[address] <<" at address "<<address<<'\n';
     return memory[address];
 }
 
-//TODO: set it in memory to not have gaps between fetch window
-void Memory::set_data(int address, char** data)
+void Memory::set_data(int address, char data[])
 {
-    memory[address] = data;
+    strcpy(memory[address], data);
 }
 
 void Memory::loadInstructionsFromFile(char* filename)
 {
     ifstream fin(filename);
 
-    char * aux;
-    int i = 0, j = 0;
+    string line;
 
-    while(fin>>aux) {
-        char *token = strtok(aux, " ");
+    int address = 0;
 
-        while(token != NULL) {
-            memory[i][j] = token;
-            
-            if(j == 3) {
-                j = 0;
-                i++;
-            }
-            else {
-                j++;
-            }
+    while (fin>>line)
+    {
+        if(line[0] == '#') {
+            address = stoi(line.substr(1), 0, 16);
+        }
+        else {
+            char* data = new char[65535];
+            strcpy(data, line.c_str());
+            strcpy(memory[address], data);
 
-            token = strtok(NULL, " ");
+            address += 2;
+        
         }
     }
-
-    for(int ii = 0; ii < i; ii++)
-        for(int jj = 0; jj < 4; jj++)
-            cout<<memory[ii][jj]<<endl;
+    
+    fin.close();
 }

@@ -1,17 +1,14 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#pragma once
 
 class Fetch {
 public:
      Fetch();
      void run(key_t key);
 private:
-     static int instructionPointer;
-     key_t keyToLoadStore;
-     int msgIdToLoadStore;
-     key_t keyFromLoadStore;
-     int msgIdFromLoadStore;    
-
+     key_t keyToLoad;
+     int msgIdToLoad;
+     key_t keyFromLoad;
+     int msgIdFromLoad;    
 };
-
-int Fetch::instructionPointer = 0;

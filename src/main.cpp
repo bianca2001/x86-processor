@@ -35,7 +35,15 @@ int main(){
     key_t key;
 
     char* file = (char*)"input.txt";
+
+    Memory::memory = new char*[65535];
+    for(int i = 0; i < 65535; i++) {
+        Memory::memory[i] = new char[65535];
+    }
+
     Memory::loadInstructionsFromFile(file);
+
+    
 
     // key = ftok("progfile", 65);
     // int msgid = msgget(key, 0666 | IPC_CREAT);
@@ -61,6 +69,17 @@ int main(){
         return 0;
     }
 
+    child = fork();
+    if(child == 0) {
+        cpu.loadStore.load();
+        return 0;
+    }
+
+    child = fork();
+    if(child == 0) {
+        cpu.loadStore.store();
+        return 0;
+    }
 
 /*
     while(!finished) {

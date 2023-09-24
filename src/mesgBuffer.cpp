@@ -1,6 +1,6 @@
 struct mesg_buffer_char {
     long mesg_type;
-    char mesg_text[100];
+    char mesg_text[65535];
 };
 
 struct mesg_buffer_matrix {

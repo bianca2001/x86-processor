@@ -1,36 +1,40 @@
 #include "fetch.h"
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <string>
 #include <iostream>
-#include<unistd.h>
+#include <unistd.h>
+#include <string.h>
 #include "mesgBuffer.cpp"
+#include "registers.h"
 using namespace std;
 
 
 Fetch::Fetch()
 {
-    keyLoadStore = ftok("progfile", 1);
-    msgIdLoadStore = msgget(keyLoadStore, 0666 | IPC_CREAT);
+    keyToLoad = ftok("/workspaces/codespaces-blank/message queues/fetchToLoad", 1);
+    msgIdToLoad = msgget(keyToLoad, 0666 | IPC_CREAT);
+
+    keyFromLoad = ftok("/workspaces/codespaces-blank/message queues/loadToFetch", 2);
+    msgIdFromLoad = msgget(keyFromLoad, 0666 | IPC_CREAT);
+
 }
 
 void Fetch::run(key_t key)
 {
     mesg_buffer_int pointer;
     pointer.mesg_type = 1;
-    pointer.mesg_text = instructionPointer;
+    pointer.mesg_text = Registers::ip;
 
-cerr<<"Fetch: Sending instruction pointer to load/store\n";
+cerr<<"Fetch: Sending instruction pointer "<< pointer.mesg_text <<" to load\n";
 
-    msgsnd(msgIdLoadStore, &pointer, sizeof(pointer), 0);
+    msgsnd(msgIdToLoad, &pointer, sizeof(pointer), 0);
 
-cerr<<"Fetch: Waiting for message from load/store\n";
+cerr<<"Fetch: Waiting for message from load\n";
 
-    mesg_buffer_matrix message_from_load;
+    mesg_buffer_char message_from_load;
 
-    msgrcv(msgIdLoadStore, &message_from_load, sizeof(message_from_load), 1, 0);
+    msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 2);
 
-cerr<<"Fetch: Received message from load/store\n";
+cerr<<"Fetch: Received message "<< message_from_load.mesg_text <<" from load\n";
 
-    sleep(1);
+    return 0;
 }

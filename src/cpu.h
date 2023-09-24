@@ -2,6 +2,7 @@
 #include "decode.h"
 #include "execute.h"
 #include "loadStore.h"
+#pragma once
 
 class CPU {
 public:
