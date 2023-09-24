@@ -29,10 +29,8 @@ cerr<<"Load: Waiting for address from fetch\n";
 
 cerr << "Load: Received address " << pointer.mesg_text << " from fetch\n";
 
-    //message.mesg_text = Memory::get_data(pointer.mesg_text);
-    char* data = Memory::get_data(pointer.mesg_text);
+    message.mesg_text = Memory::get_data(pointer.mesg_text);
     
-    strcpy(message.mesg_text, data);
 
 cerr<<"Load: Sending data "<< message.mesg_text <<" to fetch\n";
 
@@ -40,7 +38,7 @@ cerr<<"Load: Sending data "<< message.mesg_text <<" to fetch\n";
 
 cerr<<"Load: Sent data "<< message.mesg_text <<" to fetch\n";
 
-    return 0;
+    return;
 }
 
 void LoadStore::store()

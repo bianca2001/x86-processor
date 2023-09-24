@@ -32,9 +32,9 @@ cerr<<"Fetch: Waiting for message from load\n";
 
     mesg_buffer_char message_from_load;
 
-    msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 2);
+    msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
 
 cerr<<"Fetch: Received message "<< message_from_load.mesg_text <<" from load\n";
 
-    return 0;
+    return;
 }
