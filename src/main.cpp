@@ -36,10 +36,7 @@ int main(){
 
     char* file = (char*)"input.txt";
 
-    Memory::memory = new char*[65535];
-    for(int i = 0; i < 65535; i++) {
-        Memory::memory[i] = new char[65535];
-    }
+    Memory::initialize();
 
     Memory::loadInstructionsFromFile(file);
 

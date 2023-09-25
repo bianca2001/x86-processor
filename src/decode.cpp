@@ -26,24 +26,37 @@ cerr<<"Decode: Received message \n";
 
     string in = "";
     
-    if(message_from_fetch.mesg_text[0]) {
+    int valid = 0;
+
+    //change to convert to binary then append to string for each instruction
+    //instead of appending and then converting to binary
+
+    if(strstr(message_from_fetch.mesg_text[0], "ffff") == NULL) {
         in.append(message_from_fetch.mesg_text[0]);
+        valid++;
     }
-cerr<<"Decode: in = "<<in<<"\n";
+        
 
-    in.append(message_from_fetch.mesg_text[1]);
+    if(strstr(message_from_fetch.mesg_text[1], "ffff") ==  NULL) {
+        in.append(message_from_fetch.mesg_text[1]);
+        valid++;
+    }
 
-cerr<<"Decode: in = "<<in<<"\n";
-
-    if (message_from_fetch.mesg_text[2] != "")
-    {
+    if (strstr(message_from_fetch.mesg_text[2], "ffff") == NULL){
         in.append(message_from_fetch.mesg_text[2]);
+        valid++;
     }
     
-    if (message_from_fetch.mesg_text[3] != 0)
+    if (strstr(message_from_fetch.mesg_text[3], "ffff") == NULL){
         in.append(message_from_fetch.mesg_text[3]);
+        valid++;
+    }
 
-    bitset<64> binIn = stoi(in, 0, 16);
+cerr<<"Decode: in = "<<in<<"\n";
+
+    const size_t bitResult = 16 * valid;
+
+    bitset<bitResult> binIn = stoi(in, 0, 16);
 
 cerr<<"Decode: binIn = "<<binIn<<"\n";
 
@@ -74,6 +87,7 @@ cerr<<"Decode: instruction = "<<instructionFetch<<"\n";
 
     int src1, src2, dest;
 cerr<<"Decode: opcode = "<< opcode <<"\n";
+
     switch (opcode)
     {
     case add:

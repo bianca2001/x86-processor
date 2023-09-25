@@ -5,7 +5,6 @@
 using namespace std;
 
 
-
 char* Memory::get_data(int address)
 {
 cerr<<"Memory: Returning data "<< memory[address] <<" at address "<<address<<'\n';
@@ -31,9 +30,11 @@ void Memory::loadInstructionsFromFile(char* filename)
             address = stoi(line.substr(1), 0, 16);
         }
         else {
-            char* data;
+            char* data = new char[65535];
+            
             strcpy(data, line.c_str());
-            strcpy(memory[address], data);
+            
+            memory[address] = data;
 
             address += 2;
         
@@ -41,4 +42,11 @@ void Memory::loadInstructionsFromFile(char* filename)
     }
     
     fin.close();
+}
+
+void Memory::initialize()
+{
+    for(int i = 0; i < 65535; i++) {
+        memory[i] = "ffff\0";
+    }
 }

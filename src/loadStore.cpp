@@ -39,8 +39,6 @@ cerr << "Load: Received address " << pointer.mesg_text << " from fetch\n";
     message.mesg_text[3] = Memory::get_data(p);
 
 
-    
-
 cerr<<"Load: Sending data "<< message.mesg_text <<" to fetch\n";
 
     msgsnd(msgIdToFetch, &message, sizeof(message), 0);

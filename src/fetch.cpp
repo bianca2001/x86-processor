@@ -38,7 +38,7 @@ cerr<<"Fetch: Waiting for message from load\n";
 
 cerr<<"Fetch: Received message ";
     for(int i = 0; i < 4; i++) {
-        cerr << message_from_load.mesg_text[i] << " ";
+         cerr << message_from_load.mesg_text[i] << " ";
     }
 
     msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);

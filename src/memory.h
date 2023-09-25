@@ -11,5 +11,6 @@ class Memory {
         static char* get_data(int address);
         static void set_data(int address, char data[]);
         static void loadInstructionsFromFile(char* filename);
+        static void initialize();
         inline static char** memory = new char*[65535]{new char[65535]};
 };
