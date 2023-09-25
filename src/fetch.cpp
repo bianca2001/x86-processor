@@ -20,28 +20,41 @@ Fetch::Fetch()
     msgIdToDecode = msgget(keyToDecode, 0666 | IPC_CREAT);
 }
 
+
 void Fetch::run(key_t key)
 {
-    mesg_buffer_int pointer;
-    pointer.mesg_type = 1;
-    pointer.mesg_text = Registers::ip;
+    int prev = 0;
+
+    while(1) {
+        if(prev == Registers::ip) {
+            sleep(1);
+            continue;
+        }
+
+        mesg_buffer_int pointer;
+        pointer.mesg_type = 1;
+        pointer.mesg_text = Registers::ip;
 
 cerr<<"Fetch: Sending instruction pointer "<< pointer.mesg_text <<" to load\n";
 
-    msgsnd(msgIdToLoad, &pointer, sizeof(pointer), 0);
+        msgsnd(msgIdToLoad, &pointer, sizeof(pointer), 0);
 
 cerr<<"Fetch: Waiting for message from load\n";
 
-    mesg_buffer_char_matrix message_from_load;
+        mesg_buffer_char_matrix message_from_load;
 
-    msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
+        msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
 
 cerr<<"Fetch: Received message ";
     for(int i = 0; i < 4; i++) {
          cerr << message_from_load.mesg_text[i] << " ";
     }
+cerr<<"\n";
 
-    msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);
+        msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);
+
 cerr<<"Fetch: Sent message to decode\n";
+    }
+    
     return;
 }

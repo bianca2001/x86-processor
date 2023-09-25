@@ -12,3 +12,8 @@ struct mesg_buffer_int {
     long mesg_type;
     int mesg_text;
 };
+
+struct mesg_buffer_instruction{
+    long mesg_type;
+    int mesg_text[5];
+};

@@ -9,4 +9,6 @@ public:
 private:
     key_t keyFromFetch;
     int msgIdFromFetch;
+    key_t keyToExecute;
+    int msgIdToExecute;
 };

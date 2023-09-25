@@ -10,6 +10,9 @@ Decode::Decode()
 {
     keyFromFetch = ftok("/workspaces/codespaces-blank/message queues/fetchToDecode", 3);
     msgIdFromFetch = msgget(keyFromFetch, 0666 | IPC_CREAT);
+
+    keyToExecute = ftok("/workspaces/codespaces-blank/message queues/decodeToExecute", 4);
+    msgIdToExecute = msgget(keyToExecute, 0666 | IPC_CREAT);
 }
 
 void Decode::run()
@@ -24,50 +27,40 @@ cerr<<"Decode: Started\n";
 
 cerr<<"Decode: Received message \n";
 
-    string in = "";
-    
-    int valid = 0;
-
     //change to convert to binary then append to string for each instruction
     //instead of appending and then converting to binary
 
+    string instructionFetch = "";
+
     if(strstr(message_from_fetch.mesg_text[0], "ffff") == NULL) {
-        in.append(message_from_fetch.mesg_text[0]);
-        valid++;
+        bitset<16> bin = stoi(message_from_fetch.mesg_text[0], 0, 16);
+        instructionFetch.append(bin.to_string());
     }
         
 
     if(strstr(message_from_fetch.mesg_text[1], "ffff") ==  NULL) {
-        in.append(message_from_fetch.mesg_text[1]);
-        valid++;
+        bitset<16> bin = stoi(message_from_fetch.mesg_text[1], 0, 16);
+        instructionFetch.append(bin.to_string());
     }
 
     if (strstr(message_from_fetch.mesg_text[2], "ffff") == NULL){
-        in.append(message_from_fetch.mesg_text[2]);
-        valid++;
+        bitset<16> bin = stoi(message_from_fetch.mesg_text[2], 0, 16);
+        instructionFetch.append(bin.to_string());
     }
     
     if (strstr(message_from_fetch.mesg_text[3], "ffff") == NULL){
-        in.append(message_from_fetch.mesg_text[3]);
-        valid++;
+        bitset<16> bin = stoi(message_from_fetch.mesg_text[3], 0, 16);
+        instructionFetch.append(bin.to_string());
     }
 
-cerr<<"Decode: in = "<<in<<"\n";
+cerr<<"Decode: in = "<<instructionFetch<<"\n";
 
-    const size_t bitResult = 16 * valid;
 
-    bitset<bitResult> binIn = stoi(in, 0, 16);
-
-cerr<<"Decode: binIn = "<<binIn<<"\n";
-
-    string instructionFetch = binIn.to_string();
-
-cerr<<"Decode: instruction = "<<instructionFetch<<"\n";
-
-    int opcode = stoi(instructionFetch.substr(0, 6));
+    int opcode = stoi(instructionFetch.substr(0, 6), 0, 2);
 
     instructionFetch = instructionFetch.substr(6);
 
+    //TODO: put as define in a file
     const int add = 1;
     const int sub = 2;
     const int mov = 3;
@@ -85,7 +78,7 @@ cerr<<"Decode: instruction = "<<instructionFetch<<"\n";
     const int push = 15;
     const int pop = 16;
 
-    int src1, src2, dest;
+    int src1, src2, dest, param1, param2;
 cerr<<"Decode: opcode = "<< opcode <<"\n";
 
     switch (opcode)
@@ -110,10 +103,17 @@ cerr<<"Decode: opcode = "<< opcode <<"\n";
         break;
     case jmp:
 cerr<< "Decode: jmp\n";
-        src1 = stoi(instructionFetch.substr(0, 5));
-        instructionFetch = instructionFetch.substr(10);
+        src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
+        src2 = NULL;
+        param1 = stoi(instructionFetch.substr(10, 16), 0, 2);
+        param2 = NULL;
 
-cerr<<"Decode: instr remained = "<<instructionFetch<<"\n";
+        instructionFetch = instructionFetch.substr(16);
+
+cerr<<"Decode: instr remained = "<< instructionFetch <<"\n";
+cerr<<"Decode: src1 = "<< src1 <<"\n";
+cerr<<"Decode: param1 = "<< param1 <<"\n";
+
         break;
     case je:
         /* code */
@@ -145,6 +145,16 @@ cerr<<"Decode: instr remained = "<<instructionFetch<<"\n";
     default:
         break;
     }
+
+    mesg_buffer_instruction message_to_execute;
+    message_to_execute.mesg_type = 1;
+    message_to_execute.mesg_text[0] = opcode;
+    message_to_execute.mesg_text[1] = src1;
+    message_to_execute.mesg_text[2] = src2;
+    message_to_execute.mesg_text[3] = param1;
+    message_to_execute.mesg_text[4] = param2;
+
+    msgsnd(msgIdToExecute, &message_to_execute, sizeof(message_to_execute), 0);
 
     return;
 }
