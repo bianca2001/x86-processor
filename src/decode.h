@@ -5,6 +5,7 @@ class Decode{
 public:
     Decode();
     void run();
+    void decode();
 
 private:
     key_t keyFromFetch;

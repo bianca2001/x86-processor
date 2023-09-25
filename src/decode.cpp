@@ -17,9 +17,13 @@ Decode::Decode()
 
 void Decode::run()
 {
-    //TODO: detect instruction type
-    //TODO: decode instruction
-    //TODO: send decoded instruction to execute
+    while(1) {
+        decode();
+    }
+}
+
+void Decode::decode()
+{
 cerr<<"Decode: Started\n";
     mesg_buffer_char_matrix message_from_fetch;
 
@@ -27,29 +31,10 @@ cerr<<"Decode: Started\n";
 
 cerr<<"Decode: Received message \n";
 
-    //change to convert to binary then append to string for each instruction
-    //instead of appending and then converting to binary
-
     string instructionFetch = "";
 
-    if(strstr(message_from_fetch.mesg_text[0], "ffff") == NULL) {
-        bitset<16> bin = stoi(message_from_fetch.mesg_text[0], 0, 16);
-        instructionFetch.append(bin.to_string());
-    }
-        
-
-    if(strstr(message_from_fetch.mesg_text[1], "ffff") ==  NULL) {
-        bitset<16> bin = stoi(message_from_fetch.mesg_text[1], 0, 16);
-        instructionFetch.append(bin.to_string());
-    }
-
-    if (strstr(message_from_fetch.mesg_text[2], "ffff") == NULL){
-        bitset<16> bin = stoi(message_from_fetch.mesg_text[2], 0, 16);
-        instructionFetch.append(bin.to_string());
-    }
-    
-    if (strstr(message_from_fetch.mesg_text[3], "ffff") == NULL){
-        bitset<16> bin = stoi(message_from_fetch.mesg_text[3], 0, 16);
+    for(int i = 0; i < 4; i++) {
+        bitset<16> bin = stoi(message_from_fetch.mesg_text[i], 0, 16);
         instructionFetch.append(bin.to_string());
     }
 

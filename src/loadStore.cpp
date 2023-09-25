@@ -34,18 +34,19 @@ cerr << "Load: Received address " << pointer.mesg_text << " from fetch\n";
         int p = pointer.mesg_text;
         message.mesg_text[0] = Memory::get_data(p);
         p += 2;
+cerr << "Load: Data " << message.mesg_text[0] << " from address " << p << "\n";
         message.mesg_text[1] = Memory::get_data(p);
         p += 2;
+cerr << "Load: Data " << message.mesg_text[1] << " from address " << p << "\n";
         message.mesg_text[2] = Memory::get_data(p);
         p += 2;
+cerr << "Load: Data " << message.mesg_text[2] << " from address " << p << "\n";
         message.mesg_text[3] = Memory::get_data(p);
-
-
-cerr<<"Load: Sending data "<< message.mesg_text <<" to fetch\n";
+cerr << "Load: Data " << message.mesg_text[3] << " from address " << p << "\n";
 
         msgsnd(msgIdToFetch, &message, sizeof(message), 0);
 
-cerr<<"Load: Sent data "<< message.mesg_text <<" to fetch\n";
+        sleep(10);
     }
     return;
 }

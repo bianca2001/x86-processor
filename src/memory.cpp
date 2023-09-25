@@ -34,7 +34,7 @@ void Memory::loadInstructionsFromFile(char* filename)
             
             strcpy(data, line.c_str());
             
-            memory[address] = data;
+            memory[address] = strcat(data, "\0");
 
             address += 2;
         
@@ -46,7 +46,8 @@ void Memory::loadInstructionsFromFile(char* filename)
 
 void Memory::initialize()
 {
+    char *aux = new char[65535];
     for(int i = 0; i < 65535; i++) {
-        memory[i] = "ffff\0";
+        memory[i] = (char*)"ffff\0";
     }
 }

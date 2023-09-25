@@ -23,13 +23,7 @@ Fetch::Fetch()
 
 void Fetch::run(key_t key)
 {
-    int prev = 0;
-
     while(1) {
-        if(prev == Registers::ip) {
-            sleep(1);
-            continue;
-        }
 
         mesg_buffer_int pointer;
         pointer.mesg_type = 1;
@@ -46,14 +40,21 @@ cerr<<"Fetch: Waiting for message from load\n";
         msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
 
 cerr<<"Fetch: Received message ";
-    for(int i = 0; i < 4; i++) {
-         cerr << message_from_load.mesg_text[i] << " ";
-    }
+for(int i = 0; i < 4; i++) {
+        cerr << message_from_load.mesg_text[i] << " ";
+}
 cerr<<"\n";
 
         msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);
 
+        if(Registers::ip + 8 < 65535)
+            Registers::ip += 8;
+        else
+            Registers::ip = 0;
+        
 cerr<<"Fetch: Sent message to decode\n";
+
+        sleep(10);
     }
     
     return;
