@@ -110,13 +110,13 @@ void Execute::run()
     case jmp_command:
     {
 cerr << "Execute: jmp\n";
-cerr << "Execute: ip = " << Registers::ip << "\n";
+//cerr << "Execute: ip = " << Registers::getIp() << "\n";
 
         int address = getData(message_from_decode.mesg_text[1], 
         message_from_decode.mesg_text[3]);
-        Registers::ip = address;
+        Registers::setIp(address);
 
-cerr << "Execute: ip = " << Registers::ip << "\n";
+//cerr << "Execute: ip = " << Registers::getIp() << "\n";
         break;
     }
     case je:

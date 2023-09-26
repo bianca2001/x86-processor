@@ -24,18 +24,21 @@ void Decode::run()
 
 void Decode::decode()
 {
-cerr<<"Decode: Started\n";
+//cerr<<"Decode: Started\n";
     mesg_buffer_char_matrix message_from_fetch;
 
     msgrcv(msgIdFromFetch, &message_from_fetch, sizeof(message_from_fetch), 1, 0);
 
-cerr<<"Decode: Received message \n";
+//cerr<<"Decode: Received message \n";
 
     string instructionFetch = "";
 
     for(int i = 0; i < 4; i++) {
-        bitset<16> bin = stoi(message_from_fetch.mesg_text[i], 0, 16);
-        instructionFetch.append(bin.to_string());
+//cerr<<"Decode: message_from_fetch.mesg_text[i] = "<<message_from_fetch.mesg_text[i]<<"\n";
+        if(strstr(message_from_fetch.mesg_text[i], "ffff") == NULL) {
+            bitset<16> bin = stoi(message_from_fetch.mesg_text[i], 0, 16);
+            instructionFetch.append(bin.to_string());
+        }
     }
 
 cerr<<"Decode: in = "<<instructionFetch<<"\n";
@@ -75,7 +78,27 @@ cerr<<"Decode: opcode = "<< opcode <<"\n";
         /* code */
         break;
     case mov:
-        /* code */
+        src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
+        src2 = stoi(instructionFetch.substr(5, 5), 0, 2);
+
+        instructionFetch = instructionFetch.substr(10);
+
+        if (src1 > 7) {
+            param1 = stoi(instructionFetch.substr(0, 16), 0, 2);
+            instructionFetch = instructionFetch.substr(16);
+        }
+
+        if (src2 > 7) {
+cerr<< instructionFetch.substr(0, 16) <<"\n";
+            param2 = stoi(instructionFetch.substr(0, 16), 0, 2);
+            instructionFetch = instructionFetch.substr(16);
+        }
+
+cerr << "Decode: src1 = " << src1;
+cerr << " src2 = " << src2;
+cerr << " param1 = " << param1;
+cerr << " param2 = " << param2 << "\n";
+
         break;
     case mul:
         /* code */
@@ -87,17 +110,17 @@ cerr<<"Decode: opcode = "<< opcode <<"\n";
         /* code */
         break;
     case jmp:
-cerr<< "Decode: jmp\n";
+//cerr<< "Decode: jmp\n";
         src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
         src2 = NULL;
         param1 = stoi(instructionFetch.substr(10, 16), 0, 2);
         param2 = NULL;
 
-        instructionFetch = instructionFetch.substr(16);
+        instructionFetch = instructionFetch.substr(26);
 
-cerr<<"Decode: instr remained = "<< instructionFetch <<"\n";
-cerr<<"Decode: src1 = "<< src1 <<"\n";
-cerr<<"Decode: param1 = "<< param1 <<"\n";
+//cerr<<"Decode: instr remained = "<< instructionFetch <<"\n";
+//cerr<<"Decode: src1 = "<< src1 <<"\n";
+//cerr<<"Decode: param1 = "<< param1 <<"\n";
 
         break;
     case je:

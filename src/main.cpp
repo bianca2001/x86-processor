@@ -12,13 +12,7 @@ using namespace std;
 
 ifstream fin("input.txt");
 
-//class cpu : function fetch -> decode -> execute -> load/store(from memory)
-//class memory : function load, store
-
-
 //communication done through queues https://www.geeksforgeeks.org/ipc-using-message-queues/
-
-//fetch/decode/execute/load/store parallelized
 
 //TODO: clock
 //TODO: modify to open all the modules at the same time instead
@@ -78,4 +72,7 @@ int main(){
         return 0;
     }
 
+
+    sleep(100);
+    return 0;
 }
