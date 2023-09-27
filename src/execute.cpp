@@ -15,40 +15,16 @@ Execute::Execute()
 
 
 int getData(int src, int data) {
-    const int r1 = 1;
-    const int r2 = 2;
-    const int r3 = 3;
-    const int r4 = 4;
-    const int r5 = 5;
-    const int r6 = 6;
-    const int r7 = 7;
     const int imm = 16;
     const int addr = 17;
     const int addr_r = 18;
 
+    if(src < 8){
+        return Registers::getR(src - 1);
+    }
+
     switch (src)
     {
-    case r1:
-        return Registers::r[0];
-        break;
-    case r2:
-        return Registers::r[1];
-        break;
-    case r3:    
-        return Registers::r[2];
-        break; 
-    case r4:
-        return Registers::r[3];
-        break;
-    case r5:
-        return Registers::r[4];
-        break;
-    case r6: 
-        return Registers::r[5];
-        break;
-    case r7: 
-        return Registers::r[6];
-        break;
     case imm: 
         return data;
         break;
@@ -76,7 +52,7 @@ void Execute::run()
     const int mul = 4;
     const int div = 5;
     const int cmp = 6;
-    const int jmp_command = 7;
+    const int jmp = 7;
     const int je = 8;
     const int jl = 9;
     const int jg = 10;
@@ -96,18 +72,37 @@ void Execute::run()
         /* code */
         break;
     case mov:
-        /* code */
-        break;
+        {
+cerr << "Execute: mov\n";
+            int data = getData(message_from_decode.mesg_text[2], message_from_decode.mesg_text[4]);
+
+cerr << "Execute: data = " << data << "\n";
+
+            if (message_from_decode.mesg_text[1] < 8)
+            {
+                Registers::setR(message_from_decode.mesg_text[1] - 1, data);
+            }
+            if(message_from_decode.mesg_text[1] == 17) {
+    cerr << "Execute: !!!!set access memory \n";
+            }
+            if(message_from_decode.mesg_text[1] == 18) {
+    cerr << "Execute: !!!!set access memory \n";
+            }
+
+            Registers::setIp(Registers::getIp() + 8);
+
+            break;
+        }
     case mul:
-        /* code */
-        break;
+        {
+        break;}
     case div:
-        /* code */
-        break;
+        {
+        break;}
     case cmp:
-        /* code */
-        break;
-    case jmp_command:
+        {
+        break;}
+    case jmp:
     {
 cerr << "Execute: jmp\n";
 //cerr << "Execute: ip = " << Registers::getIp() << "\n";
@@ -120,32 +115,32 @@ cerr << "Execute: jmp\n";
         break;
     }
     case je:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case jl:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case jg:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case jz:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case call:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case ret:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case end_sim:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case push:
-        /* code */
-        break;
+        {/* code */
+        break;}
     case pop:
-        /* code */
-        break;
+        {/* code */
+        break;}
     default:
         break;
     }

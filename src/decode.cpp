@@ -31,8 +31,6 @@ void Decode::decode()
 
 //cerr<<"Decode: Received message \n";
 
-    string instructionFetch = "";
-
     for(int i = 0; i < 4; i++) {
 //cerr<<"Decode: message_from_fetch.mesg_text[i] = "<<message_from_fetch.mesg_text[i]<<"\n";
         if(strstr(message_from_fetch.mesg_text[i], "ffff") == NULL) {
