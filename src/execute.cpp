@@ -19,7 +19,7 @@ int getData(int src, int data) {
     const int addr = 17;
     const int addr_r = 18;
 
-    if(src < 8){
+    if(src < 15){
         return Registers::r[src - 1];
     }
 
@@ -74,19 +74,69 @@ void Execute::execute() {
     switch (message_from_decode.mesg_text[0])
     {
     case add:
-        /* code */
+    {
+cerr << "Execute: add\n";
+        int data = getData(message_from_decode.mesg_text[2], message_from_decode.mesg_text[4]);
+
+        if (message_from_decode.mesg_text[1] < 9)
+            {
+                Registers::r[message_from_decode.mesg_text[1] - 1] += data;
+            }
+            if(message_from_decode.mesg_text[1] == 17) {
+cerr << "Execute: !!!!set access memory \n";
+            }
+            if(message_from_decode.mesg_text[1] == 18) {
+cerr << "Execute: !!!!set access memory \n";
+            }
+
+cerr << "Execute: registers: ";
+for(int i = 0; i < 8; i++) {
+    cerr << Registers::r[i] << " ";
+}
+
+// cerr << "Execute: ip = " << Registers::ip << "\n";
+
+            Registers::setIp(Registers::getIp() + 8);
+
+
         break;
+    }
     case sub:
-        /* code */
+    {
+cerr << "Execute: sub\n";
+        int data = getData(message_from_decode.mesg_text[2], message_from_decode.mesg_text[4]);
+
+        if (message_from_decode.mesg_text[1] < 9)
+            {
+                Registers::r[message_from_decode.mesg_text[1] - 1] -= data;
+            }
+            if(message_from_decode.mesg_text[1] == 17) {
+cerr << "Execute: !!!!set access memory \n";
+            }
+            if(message_from_decode.mesg_text[1] == 18) {
+cerr << "Execute: !!!!set access memory \n";
+            }
+
+cerr << "Execute: registers: ";
+for(int i = 0; i < 8; i++) {
+    cerr << Registers::r[i] << " ";
+}
+
+// cerr << "Execute: ip = " << Registers::ip << "\n";
+
+            Registers::setIp(Registers::getIp() + 8);
+
+
         break;
+    }
     case mov:
         {
 cerr << "Execute: mov\n";
             int data = getData(message_from_decode.mesg_text[2], message_from_decode.mesg_text[4]);
 
-// cerr << "Execute: data = " << data << "\n";
+cerr << "Execute: data = " << data << "\n";
 
-            if (message_from_decode.mesg_text[1] < 8)
+            if (message_from_decode.mesg_text[1] < 15)
             {
                 Registers::r[message_from_decode.mesg_text[1] - 1] = data;
             }
@@ -98,7 +148,7 @@ cerr << "Execute: mov\n";
             }
 
 cerr << "Execute: registers: ";
-for(int i = 0; i < 7; i++) {
+for(int i = 0; i < 8; i++) {
     cerr << Registers::r[i] << " ";
 }
 

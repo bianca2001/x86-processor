@@ -15,7 +15,7 @@ class Registers {
         inline static char* ip = (char*)"/workspaces/codespaces-blank/data/ip.txt";
         //inline static vector<atomic<int>> r(vector<atomic<int>>{0, 0, 0, 0, 0, 0, 0});
         //inline static array< atomic<int>, 7 > r = {};
-        inline static int r[7] = {0};
+        inline static int r[8] = {0};
         //inline static atomic<int> ip{0x500};
         inline static int flag[3] = {0};
 

@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+#include <unistd.h>
 #include "decode.h"
-#include "mesgBuffer.cpp"
 using namespace std;
 
 Decode::Decode()
@@ -13,11 +13,41 @@ Decode::Decode()
 
     keyToExecute = ftok("/workspaces/codespaces-blank/message queues/decodeToExecute", 4);
     msgIdToExecute = msgget(keyToExecute, 0666 | IPC_CREAT);
+
+    /* keyIntern = ftok("/workspaces/codespaces-blank/message queues/decodeToDecode", 5);
+    msgIdIntern = msgget(keyIntern, 0666 | IPC_CREAT); */
 }
+
+/* void Decode::recieveInstruction() {
+    while (1)
+    {
+        mesg_buffer_char_matrix message_from_fetch;
+
+        msgrcv(msgIdFromFetch, &message_from_fetch, sizeof(message_from_fetch), 1, 0);
+
+cerr<<"Decode: received message from fetch\n";
+
+        for(int i = 0; i < 4; i++) {
+cerr<<"Decode: message_from_fetch.mesg_text[i] = "<<message_from_fetch.mesg_text[i]<<"\n";
+            if(strstr(message_from_fetch.mesg_text[i], "ffff") == NULL) {
+                bitset<16> bin = stoi(message_from_fetch.mesg_text[i], 0, 16);
+cerr<<"Decode: bin = "<<bin.to_string()<<"\n";
+                instructionFetch.append(bin.to_string());
+            }
+        }
+    }
+} */
+
 
 void Decode::run()
 {
     instructionFetch = "";
+
+    /* int child = fork();
+    if (child == 0)
+    {
+        recieveInstruction();
+    } */
 
     while(1) {
         decode();
@@ -25,16 +55,13 @@ void Decode::run()
 }
 
 void Decode::decode()
-{
-//cerr<<"Decode: Started\n";
+{   
+
     mesg_buffer_char_matrix message_from_fetch;
 
     msgrcv(msgIdFromFetch, &message_from_fetch, sizeof(message_from_fetch), 1, 0);
 
-//cerr<<"Decode: Received message \n";
-
     for(int i = 0; i < 4; i++) {
-//cerr<<"Decode: message_from_fetch.mesg_text[i] = "<<message_from_fetch.mesg_text[i]<<"\n";
         if(strstr(message_from_fetch.mesg_text[i], "ffff") == NULL) {
             bitset<16> bin = stoi(message_from_fetch.mesg_text[i], 0, 16);
             instructionFetch.append(bin.to_string());
@@ -42,7 +69,6 @@ void Decode::decode()
     }
 
 cerr<<"Decode: in = "<<instructionFetch<<"\n";
-
 
     int opcode = stoi(instructionFetch.substr(0, 6), 0, 2);
 
@@ -66,29 +92,51 @@ cerr<<"Decode: in = "<<instructionFetch<<"\n";
     const int push = 15;
     const int pop = 16;
 
-    int src1, src2, dest, param1, param2;
+    int src1 = 0, src2 = 0, param1 = 0, param2 = 0;
 cerr<<"Decode: opcode = "<< opcode <<"\n";
 
     switch (opcode)
     {
     case add:
-        /* code */
-        break;
     case sub:
-        /* code */
+        {
+            src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
+            src2 = stoi(instructionFetch.substr(5, 5), 0, 2);
+
+            instructionFetch = instructionFetch.substr(10);
+
+
+            if (src1 > 15) {
+                param1 = stoi(instructionFetch.substr(0, 16), 0, 2);
+                instructionFetch = instructionFetch.substr(16);
+            }
+
+            if (src2 > 15) {
+// cerr<< instructionFetch.substr(0, 16) <<"\n";
+                param2 = stoi(instructionFetch.substr(0, 16), 0, 2);
+                instructionFetch = instructionFetch.substr(16);
+            }
+
+cerr << "Decode: src1 = " << src1;
+cerr << " src2 = " << src2;
+cerr << " param1 = " << param1;
+cerr << " param2 = " << param2 << "\n";
+
+        
         break;
+        }
     case mov:
         src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
         src2 = stoi(instructionFetch.substr(5, 5), 0, 2);
 
         instructionFetch = instructionFetch.substr(10);
 
-        if (src1 > 7) {
+        if (src1 > 15) {
             param1 = stoi(instructionFetch.substr(0, 16), 0, 2);
             instructionFetch = instructionFetch.substr(16);
         }
 
-        if (src2 > 7) {
+        if (src2 > 15) {
 // cerr<< instructionFetch.substr(0, 16) <<"\n";
             param2 = stoi(instructionFetch.substr(0, 16), 0, 2);
             instructionFetch = instructionFetch.substr(16);

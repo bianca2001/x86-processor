@@ -1,6 +1,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string>
+#include "mesgBuffer.cpp"
 using namespace std;
 
 class Decode{
@@ -16,4 +17,7 @@ private:
     int msgIdFromFetch;
     key_t keyToExecute;
     int msgIdToExecute;
+
+    /* key_t keyIntern;
+    int msgIdIntern; */
 };
