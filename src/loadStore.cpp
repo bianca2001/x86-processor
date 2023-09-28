@@ -19,7 +19,7 @@ LoadStore::LoadStore()
 //TODO: load from multiple of 8 to multiple of 8 or something to simulate fetch window
 void LoadStore::load()
 {
-cerr<<"Load: Waiting for address from fetch\n";
+// cerr<<"Load: Waiting for address from fetch\n";
 
     while(1) {
         mesg_buffer_int pointer;
@@ -46,7 +46,7 @@ cerr<<"Load: Waiting for address from fetch\n";
 
         msgsnd(msgIdToFetch, &message, sizeof(message), 0);
 
-        sleep(10);
+        sleep(5);
     }
     return;
 }

@@ -3,6 +3,11 @@
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
+#include <chrono>
+#include <future>
+#include <thread>
+#include <wait.h>
+
 #include "mesgBuffer.cpp"
 #include "registers.h"
 using namespace std;
@@ -27,7 +32,7 @@ void Fetch::run(key_t key)
     while(1) {
         if(prev == Registers::getIp()) {
 cerr << "Fetch: prev:" << prev << " ip:" << Registers::getIp() << " identical\n";
-            sleep(1);
+            sleep(5);
             continue;
         }
 
@@ -41,13 +46,13 @@ cerr<<"Fetch: Sending instruction pointer "<< pointer.mesg_text <<" to load\n";
         msgsnd(msgIdToLoad, &pointer, sizeof(pointer), 0);
 
 
-cerr<<"Fetch: Waiting for message from load\n";
+// cerr<<"Fetch: Waiting for message from load\n";
 
         mesg_buffer_char_matrix message_from_load;
 
         msgrcv(msgIdFromLoad, &message_from_load, sizeof(message_from_load), 1, 0);
 
-cerr<<"Fetch: Received message ";
+// cerr<<"Fetch: Received message ";
 for(int i = 0; i < 4; i++) {
         cerr << message_from_load.mesg_text[i] << " ";
 }
@@ -55,7 +60,7 @@ cerr<<"\n";
 
         msgsnd(msgIdToDecode, &message_from_load, sizeof(message_from_load), 0);
         
-cerr<<"Fetch: Sent message to decode\n";
+// cerr<<"Fetch: Sent message to decode\n";
 
     }
     

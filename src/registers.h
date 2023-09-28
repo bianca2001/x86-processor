@@ -1,15 +1,22 @@
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
+#include <sstream>
+#include <fstream>
+#include <atomic>
+#include <vector>
+#include <array>
 #pragma once
 using namespace std;
 
 class Registers {
     public:
-        //inline static int r[8] = {0};
-        inline static char* r = (char*)"/workspaces/codespaces-blank/data/registers.txt";
-        //inline static int ip = 0xfff0;
+        //inline static char* r = (char*)"/workspaces/codespaces-blank/data/registers.txt";
         inline static char* ip = (char*)"/workspaces/codespaces-blank/data/ip.txt";
+        //inline static vector<atomic<int>> r(vector<atomic<int>>{0, 0, 0, 0, 0, 0, 0});
+        //inline static array< atomic<int>, 7 > r = {};
+        inline static int r[7] = {0};
+        //inline static atomic<int> ip{0x500};
         inline static int flag[3] = {0};
 
         static int getIp() {
@@ -28,56 +35,52 @@ class Registers {
             fclose(fp);
         }
 
-        static int getR(int rNum) {
-cerr<<"getR: rNum = "<<rNum<<"\n";
-            int rValue;
-            FILE *fp;
-            fp = fopen(r, "r");
-            int aux;
-            for(int i = 0; i < rNum; i++) {
-                fscanf(fp, "%x", &aux);
-            }
-            return aux;
-        }
+//         static int getR(int rNum) {
+// cerr<<"getR: rNum = "<<rNum<<"\n";
+//             int rValue;
+//             FILE *fp;
+//             fp = fopen(r, "r");
+//             int aux;
+//             for(int i = 0; i < rNum; i++) {
+//                 fscanf(fp, "%x", &aux);
+//             }
+//             fclose(fp);
+//             return aux;
+//         }
 
 
-        //TODO: change only one register
-        static void setR(int rNum, int newValue) {
-cerr<<"setR: rNum = "<<rNum<<"\n";
-            FILE *fp;
-            fp = fopen(r, "r");
-            char aux[100];
-            char fileContent[1000];
-            int i;
+//         //TODO: change only one register
+//         static void setR(int rNum, int newValue) {
 
-            for(i = 0; i < rNum - 1; i++) {
-                fscanf(fp, "%s", &aux);
-cerr<<"setR: aux = "<<aux<<"\n";
-                strcat(fileContent, aux);
-                strcat(fileContent, "\n");
-            }
+// cerr<<"setR: rNum = "<<rNum<<"\n";
 
-cerr<<"setR: fileContent = "<<fileContent<<"\n";
+//             ifstream fin(r);
+//             char aux[100];
+//             int i;
 
-            string newValuestring = to_string(newValue);
-            char* newValueChar = (char*)newValuestring.c_str();
+//             stringstream newFileContent;
 
-            strcat(fileContent, newValueChar);
-            strcat(fileContent, "\n");
+//             for(i = 0; i < rNum - 1; i++) {
+//                 newFileContent << aux << "\n";
+//             }
 
-cerr<<"setR: fileContent = "<<fileContent<<"\n";
+//             string newValuestring = to_string(newValue);
+//             char* newValueChar = (char*)newValuestring.c_str();
 
-            for(i = i + 1; i < 7; i++) {
-                fscanf(fp, "%s", &aux);
-                strcat(fileContent, aux);
-                strcat(fileContent, "\n");
-            }
+// cerr << "setR: newValueChar = " << newValueChar << "\n";
 
-cerr<<"setR: fileContent = "<<fileContent<<"\n";
-            fclose(fp);
+//             newFileContent << newValueChar;
 
-            fp = fopen(r, "w");
-            fprintf(fp, "%s", fileContent);
-            fclose(fp);
-        }
+//             for(i = i + 1; i < 7; i++) {
+//                 fin >> aux;
+//                 newFileContent << "\n" << aux;
+//             }
+
+//             fin.close();
+
+//             string result = newFileContent.str();
+//             ofstream fout(r);
+//             fout << result;
+//             fout.close();
+//         }
 };

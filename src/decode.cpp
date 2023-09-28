@@ -17,6 +17,8 @@ Decode::Decode()
 
 void Decode::run()
 {
+    instructionFetch = "";
+
     while(1) {
         decode();
     }
@@ -87,7 +89,7 @@ cerr<<"Decode: opcode = "<< opcode <<"\n";
         }
 
         if (src2 > 7) {
-cerr<< instructionFetch.substr(0, 16) <<"\n";
+// cerr<< instructionFetch.substr(0, 16) <<"\n";
             param2 = stoi(instructionFetch.substr(0, 16), 0, 2);
             instructionFetch = instructionFetch.substr(16);
         }
@@ -110,9 +112,9 @@ cerr << " param2 = " << param2 << "\n";
     case jmp:
 //cerr<< "Decode: jmp\n";
         src1 = stoi(instructionFetch.substr(0, 5), 0, 2);
-        src2 = NULL;
+        src2 = 0;
         param1 = stoi(instructionFetch.substr(10, 16), 0, 2);
-        param2 = NULL;
+        param2 = 0;
 
         instructionFetch = instructionFetch.substr(26);
 

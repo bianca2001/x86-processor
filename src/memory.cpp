@@ -7,7 +7,7 @@ using namespace std;
 
 char* Memory::get_data(int address)
 {
-cerr<<"Memory: Returning data "<< memory[address] <<" at address "<<address<<'\n';
+// cerr<<"Memory: Returning data "<< memory[address] <<" at address "<<address<<'\n';
     return memory[address];
 }
 

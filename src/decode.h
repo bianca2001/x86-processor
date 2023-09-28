@@ -10,7 +10,7 @@ public:
     void decode();
 
 private:
-    string instructionFetch = "";
+    string instructionFetch;
 
     key_t keyFromFetch;
     int msgIdFromFetch;

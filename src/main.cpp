@@ -5,8 +5,10 @@
 #include <sys/msg.h>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "cpu.h"
 #include "memory.h"
+#include "registers.h"
 
 using namespace std;
 
@@ -33,11 +35,6 @@ int main(){
     Memory::initialize();
 
     Memory::loadInstructionsFromFile(file);
-
-    
-
-    // key = ftok("progfile", 65);
-    // int msgid = msgget(key, 0666 | IPC_CREAT);
 
     child = fork();
 
@@ -70,7 +67,7 @@ int main(){
     if(child == 0) {
         cpu.loadStore.store();
         return 0;
-    }
+    } 
 
     sleep(100);
     return 0;

@@ -20,7 +20,7 @@ int getData(int src, int data) {
     const int addr_r = 18;
 
     if(src < 8){
-        return Registers::getR(src - 1);
+        return Registers::r[src - 1];
     }
 
     switch (src)
@@ -29,19 +29,27 @@ int getData(int src, int data) {
         return data;
         break;
     case addr: 
-cerr << "Execute: !!!!set access memory \n";
-    break;
+        cerr << "Execute: !!!!set access memory \n";
+        break;
     case addr_r: 
-cerr << "Execute: !!!!set access memory \n";
-    break;
+        cerr << "Execute: !!!!set access memory \n";
+        break;
     default:
-cerr << "Execute: something went wrong \n";
+        cerr << "Execute: something went wrong \n";
         break;
     }
+
+    return 0;
 }
 
 void Execute::run()
 {
+    while(1) {
+        execute();
+    }
+}
+
+void Execute::execute() {
     mesg_buffer_instruction message_from_decode;
 
     msgrcv(msgIdFromDecode, &message_from_decode, sizeof(message_from_decode), 1, 0);
@@ -76,11 +84,11 @@ void Execute::run()
 cerr << "Execute: mov\n";
             int data = getData(message_from_decode.mesg_text[2], message_from_decode.mesg_text[4]);
 
-cerr << "Execute: data = " << data << "\n";
+// cerr << "Execute: data = " << data << "\n";
 
             if (message_from_decode.mesg_text[1] < 8)
             {
-                Registers::setR(message_from_decode.mesg_text[1] - 1, data);
+                Registers::r[message_from_decode.mesg_text[1] - 1] = data;
             }
             if(message_from_decode.mesg_text[1] == 17) {
     cerr << "Execute: !!!!set access memory \n";
@@ -89,7 +97,18 @@ cerr << "Execute: data = " << data << "\n";
     cerr << "Execute: !!!!set access memory \n";
             }
 
+cerr << "Execute: registers: ";
+for(int i = 0; i < 7; i++) {
+    cerr << Registers::r[i] << " ";
+}
+
+// cerr << "Execute: ip = " << Registers::ip << "\n";
+
             Registers::setIp(Registers::getIp() + 8);
+
+
+
+// cerr << "Execute: ip = " << Registers::ip << "\n";
 
             break;
         }
@@ -110,8 +129,9 @@ cerr << "Execute: jmp\n";
         int address = getData(message_from_decode.mesg_text[1], 
         message_from_decode.mesg_text[3]);
         Registers::setIp(address);
+        // Registers::ip = address;
 
-//cerr << "Execute: ip = " << Registers::getIp() << "\n";
+// cerr << "Execute: ip = " << Registers::ip << "\n";
         break;
     }
     case je:
@@ -144,5 +164,4 @@ cerr << "Execute: jmp\n";
     default:
         break;
     }
-    
 }
